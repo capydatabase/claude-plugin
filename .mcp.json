@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "capydb": {
+      "type": "http",
+      "url": "https://mcp.capydb.dev/mcp"
+    }
+  }
+}

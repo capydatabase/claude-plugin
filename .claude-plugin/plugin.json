@@ -1,0 +1,11 @@
+{
+  "name": "capydb",
+  "displayName": "CapyDB",
+  "version": "1.0.0",
+  "description": "Managed Postgres for your agent: create databases, branch them into previews, run SQL safely behind restore points, and recover data - through the CapyDB connector and the workflows that keep it safe.",
+  "author": { "name": "CapyDB", "url": "https://capydb.dev", "email": "hello@capydb.dev" },
+  "homepage": "https://docs.capydb.dev/docs/guides/integrations/claude",
+  "repository": "https://github.com/capydatabase/claude-plugin",
+  "license": "MIT",
+  "keywords": ["postgres", "database", "sql", "mcp", "migrations", "previews", "backups"]
+}

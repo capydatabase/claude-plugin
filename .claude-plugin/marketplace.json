@@ -1,0 +1,14 @@
+{
+  "name": "capydb",
+  "owner": { "name": "CapyDB", "url": "https://capydb.dev" },
+  "metadata": {
+    "description": "The official CapyDB plugin for Claude."
+  },
+  "plugins": [
+    {
+      "name": "capydb",
+      "source": "./",
+      "description": "Managed Postgres for your agent: databases, previews, safe SQL, backups and restores through the CapyDB connector."
+    }
+  ]
+}
