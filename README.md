@@ -10,7 +10,7 @@ It works in Claude on the web, desktop and mobile, in Cowork, and in Claude Code
 ## What's inside
 
 - **The CapyDB connector** (`.mcp.json`): the remote MCP server at `https://mcp.capydb.dev/mcp`,
-  with fifty tools for projects, connection strings, SQL, schema, preview databases, backups,
+  with tools for projects, connection strings, SQL, schema, preview databases, backups,
   restore points, imports, observability and jobs.
 - **Skills**
   - `capydb` - set up and work with a CapyDB database: create, connect, query, preview, back up.

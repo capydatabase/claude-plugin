@@ -6,6 +6,11 @@ All notable changes to the CapyDB plugin for Claude are documented here. The for
 
 ## [Unreleased]
 
+### Changed
+
+- The README no longer states a tool count for the connector (it said fifty; the server has
+  seventy). It names what the tools cover instead.
+
 ## [1.0.0] - 2026-09-26
 
 ### Added
