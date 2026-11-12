@@ -41,18 +41,25 @@ dashboard and CLI, scoped to the workspace the user connected.
 ## Previews, backups and restores
 
 - `create_preview_database` with mode `clone` gives an isolated copy of the project to try
-  things on; it expires on its own. `reset_preview_database` rewinds it, and
+  things on; it expires on its own. Run SQL on it with `run_preview_sql` (the connector cannot
+  connect with a connection string itself). `reset_preview_database` rewinds it, and
   `delete_preview_database` removes it when you are done.
 - `create_backup` takes a backup now; `list_backups` shows what exists.
 - `restore` only restores **into a preview**. Overwriting the production database is not
   something the connector can do: restore into a preview, show the user, and let them promote
   it from the dashboard.
+- Point-in-time restores (`restore_time`, or a `pitr` restore point) need the Ship or Business
+  plan. On Vibe, restore from a backup (`backup_key`, or a restore point of kind `backup`).
 
 ## Jobs
 
 Tools that provision, back up, restore, import or change extensions return a job. Poll
 `get_job` every few seconds until its state is `completed` or `failed`, then report the
 outcome. Don't start a second mutation on the same project while one is running.
+
+A `429` from any tool is CapyDB's rate limit, not a failure of the operation: wait a few seconds
+and retry once (poll `get_job` less often if it came while polling). If it persists, stop and
+tell the user.
 
 ## Performance questions
 

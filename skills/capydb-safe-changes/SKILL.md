@@ -13,17 +13,24 @@ every risky change reversible and verified.
 1. Confirm the target: `get_project` (name, environment, Postgres version). If the project is
    production, say so to the user and get an explicit go-ahead for the specific statement.
 2. Rehearse when the change is non-trivial: `create_preview_database` with mode `clone`, wait
-   for its job with `get_job`, run the statement against the preview's own connection string
-   (`get_preview_connection_strings`) and check the result there first.
-3. Create a checkpoint: `create_restore_point` with a short `label` such as
-   `before-orders-migration`, pinned to a PITR timestamp of now or to the key of a backup you
-   just took with `create_backup`. This is what makes the change undoable.
+   for its job with `get_job`, run the statement on the preview with `run_preview_sql` and check
+   the result there (also with `run_preview_sql`) first. The connector cannot open a connection
+   string itself, so `run_preview_sql` is how SQL reaches a preview.
+3. Create a checkpoint with `create_restore_point` and a short `label` such as
+   `before-orders-migration`. This is what makes the change undoable. Which kind depends on the
+   plan (`get_project` returns it):
+   - **Ship and Business:** kind `pitr` pinned to now.
+   - **Vibe:** restores come from backups only - a `pitr` point would be refused when you try to
+     restore it. Take `create_backup`, wait for its job with `get_job`, find its `backup_key` with
+     `list_backups`, and create the restore point with kind `backup` and that key.
 
 ## Making the change
 
 - Use `execute_sql`, one statement per call, with a `WHERE` clause that selects exactly the rows
   you mean. An `UPDATE` or `DELETE` without `WHERE`, and any `TRUNCATE`, is refused by CapyDB -
-  read the refusal and scope the statement instead of working around it.
+  read the refusal and scope the statement instead of working around it. `DO` blocks and `CALL`
+  are refused too, because their effect cannot be checked from the text; the user can run them
+  in the dashboard's SQL Studio or with `capydb sql`.
 - On Postgres 18 projects, append `RETURNING old.*, new.*` to `UPDATE` and `DELETE`, so the
   exact values you overwrote are recorded in the result and in SQL history.
 
@@ -37,6 +44,13 @@ every risky change reversible and verified.
 ## Undoing a change
 
 `restore` with the restore point into a **new preview** (`preview_name`), then compare the
-preview with production using `query_sql` on each. Recover rows by copying them back with
-`execute_sql`, or have the user promote the preview from the dashboard. Never try to overwrite
-production from the connector; it is deliberately not possible.
+preview with production: `run_preview_sql` reads the preview, `query_sql` reads production.
+Recover rows by copying them back with `execute_sql`, or have the user promote the preview from
+the dashboard. Never try to overwrite production from the connector; it is deliberately not
+possible.
+
+## When CapyDB answers 429
+
+A `429` is CapyDB's rate limit (per caller), not a failed change. Wait a few seconds and retry the
+same call once; don't loop on it or start other calls meanwhile. If it keeps coming back, stop and
+tell the user.

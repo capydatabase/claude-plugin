@@ -13,6 +13,14 @@ All notable changes to the CapyDB plugin for Claude are documented here. The for
 
 ### Changed
 
+- **The `capydb-safe-changes` checkpoint works on every plan.** It pinned a point-in-time restore
+  point, which Vibe cannot restore; on Vibe the skill now takes a backup, waits for it, and pins a
+  `backup` restore point to its key. The `capydb` skill says point-in-time restores need Ship or
+  Business.
+- Both skills run SQL on a preview with `run_preview_sql` (they told the agent to use the
+  preview's connection string, which the connector cannot open), say that a `429` is the rate
+  limit (wait, retry once, then stop), and `capydb-safe-changes` notes that `execute_sql` refuses
+  `DO` and `CALL`.
 - The README no longer states a tool count for the connector (it said fifty; the server has
   seventy). It names what the tools cover instead.
 
