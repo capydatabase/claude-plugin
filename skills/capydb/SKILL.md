@@ -60,3 +60,8 @@ outcome. Don't start a second mutation on the same project while one is running.
 CapyDB has flagged. `suggest_indexes` and `get_index_hygiene` give index advice with the exact
 statements to run. Inside the database, `SELECT * FROM capydb.capydb_slow_queries();` lists the
 slowest statements; a `temp_blks_written` above zero means the query spilled to disk.
+On a Postgres 19 database `get_observability` also returns `generic_plan_calls` and
+`custom_plan_calls` on each slow query (a statement slow only sometimes and mostly generic may have
+a generic plan that suits some values badly), `lock_waits` per lock type, and
+`autovacuum_priority`; schema lint fixes bloat with `REPACK (CONCURRENTLY)` where the table allows
+it.

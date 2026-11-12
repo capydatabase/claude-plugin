@@ -6,6 +6,11 @@ All notable changes to the CapyDB plugin for Claude are documented here. The for
 
 ## [Unreleased]
 
+### Added
+
+- The `capydb` skill mentions the Postgres 19 readings of `get_observability` (plan-cache counts,
+  lock waits, autovacuum priority) and the REPACK fix schema lint gives for bloat on 19.
+
 ### Changed
 
 - The README no longer states a tool count for the connector (it said fifty; the server has
